@@ -48,6 +48,7 @@ app.get('/videos', (req: Request, res: Response) => {
 
 type RequestWithBody<B> = Request<{}, {}, B, {}>;
 
+/*
 type Body = {
     title: string,
     author: string,
@@ -58,7 +59,7 @@ type Body = {
 type Params = {
     id: string;
 }
-
+*/
 
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
@@ -85,22 +86,75 @@ app.get('/videos/:id', (req: Request, res: Response) => {
 })
 
 app.put('/videos/:id', (req: Request, res: Response) => {
-    let title = req.body.title
+    let title = req.body.title;
+    let author = req.body.author;
+    let canBeDownloaded = req.body.canBeDownloaded
+    let minAgeRestriction = req.body.minAgeRestriction
+
+    let publicationDate = req.body.publicationDate
+    let availableResolutions = req.body.availableResolutions
+
     if (!title || !title.trim() || title.length > 40 || typeof (title) !== "string") {
         res.status(400).send({
             "errorMessage": [{
                 "message": "Incorrect title",
                 "filed": "title"
             }]
-
-
         })
         return
     }
+    if (!author || !author.trim() || author.length > 20 || typeof (title) !== "string") {
+        res.status(400).send({
+            "errorMessage": [{
+                "message": "Incorrect author",
+                "filed": "author"
+            }]
+        })
+        return
+    }
+    if (!canBeDownloaded ) {
+        res.status(400).send({
+            "errorMessage": [{
+                "message": "Incorrect canBeDownloaded",
+                "filed": "canBeDownloaded"
+            }]
+        })
+        return
+    }
+
+    if (!minAgeRestriction || typeof (minAgeRestriction) !== "number") {
+        res.status(400).send({
+            "errorMessage": [{
+                "message": "Incorrect minAgeRestriction",
+                "filed": "minAgeRestriction"
+            }]
+        })
+        return
+    }
+
+    if (!publicationDate || !publicationDate.trim() || (!isValidPublicationDate(publicationDate))) {
+        res.status(400).send({
+            "errorMessage": [{
+                "message": "Incorrect publicationDate",
+                "filed": "publicationDate"
+            }]
+        })
+        return
+    }
+
+
+    function isValidPublicationDate(publicationDate: string): boolean {
+        const publicationDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+        return publicationDateRegex.test(publicationDate);
+    }
+
+
     const id = +req.params.id
     let video = videos.find((v) => v.id === id)
     if (video) {
         video.title = req.body.title
+        video.author = req.body.author
+        video.canBeDownloaded = req.body.canBeDownloaded
         res.send(video)
 
     } else {
@@ -110,11 +164,21 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 })
 
 
-
 type CreateVideoType = {
     title: string,
     author: string,
     availableResolutions: typeof AvailableResolutions
+}
+
+type PutVideoDbType = {
+
+    title: string,
+    author: string,
+    availableResolutions: typeof AvailableResolutions,
+    canBeDownloaded: boolean,
+    minAgeRestriction: number | null
+    publicationDate: string,
+
 }
 
 type ErrorMessageType = {
@@ -126,15 +190,14 @@ type ErrorMessageType = {
 type ErrorType = {
     errorMessage: ErrorMessageType[]
 }
+
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     let {title, author, availableResolutions} = req.body
-
 
 
     let errors: ErrorType = {
         errorMessage: []
     }
-
 
 
     if (!title || !title.trim() || title.trim().length > 40) {
