@@ -155,6 +155,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.title = req.body.title
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
+        video.publicationDate = req.body.publicationDate
         res.send(video)
 
     } else {
