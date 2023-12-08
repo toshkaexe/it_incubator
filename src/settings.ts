@@ -273,4 +273,7 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
     res.sendStatus(204);
 });
 
-
+app.delete('/deleteall', (req: Request, res: Response) => {
+    videos = []
+    res.sendStatus(204);
+});
