@@ -39,27 +39,13 @@ let videos: VideoDbType[] = [
     }
 ]
 
-type RequestWithParams<P> = Request<P, {}, {}, {}>;
-
 
 app.get('/videos', (req: Request, res: Response) => {
+    res.status(200)
     res.send(videos)
 })
 
 type RequestWithBody<B> = Request<{}, {}, B, {}>;
-
-/*
-type Body = {
-    title: string,
-    author: string,
-    availableResolutions: typeof AvailableResolutions
-}
-
-
-type Params = {
-    id: string;
-}
-*/
 
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
@@ -80,10 +66,14 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     const video = videos.find((v) => v.id === id)
     if (!video) {
         res.sendStatus(404)
+        res.send(404)
         return
+    } else {
+
+        res.status(200)
+        res.sendStatus(200)
+        res.send(videos)
     }
-    res.sendStatus(200)
-    res.send(videos)
 })
 
 app.put('/videos/:id', (req: Request, res: Response) => {

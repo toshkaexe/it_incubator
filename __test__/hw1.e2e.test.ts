@@ -47,9 +47,35 @@ describe('Video API Tests', () => {
 
     it('should get a video by ID', async () => {
         const videoId = 1;
-        const response = await request(app).get(`/videos/${videoId}`);
 
-        expect(response.body).toEqual(videos); // Adjust this expectation based on your actual response
+        const response = await request(app).get(`/videos/${videoId}`);
+        expect(response.status).toBe(200); //
+
+        type VideoDbType = {
+            id: number,
+            title: string,
+            author: string,
+            canBeDownloaded: boolean,
+            minAgeRestriction: number | null
+            createAt: string,
+            publicationDate: string,
+            availableResolutions: typeof AvailableResolutions;
+        }
+        let videos: VideoDbType[] = [
+            {
+                id: 1,
+                title: "string",
+                author: "string",
+                canBeDownloaded: true,
+                minAgeRestriction: null,
+                createAt: "2023-12-04T21:42:23.091Z",
+                publicationDate: "2023-12-04T21:42:23.091Z",
+                availableResolutions: ["P144"]
+            }
+        ];
+
+        expect(response.body).toEqual(videos);
+        // expect(response.body).toEqual(videos); // Adjust this expectation based on your actual response
     });
 
     it('should return 404 for a non-existent video', async () => {
