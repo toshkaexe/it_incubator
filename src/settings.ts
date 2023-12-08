@@ -185,7 +185,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         res.send(video)
 
     } else {
-        res.send(404)
+        res.send(400)
     }
 
 })
