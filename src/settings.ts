@@ -168,7 +168,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     if (errors.errorMessages.length) {
 
-        res.send(errors).status(400)
+        res.status(400).send(errors)
         return //
     }
     const id = +req.params.id
