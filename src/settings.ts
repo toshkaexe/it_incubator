@@ -156,12 +156,12 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     if (availableResolutions && Array.isArray(availableResolutions)) {
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
-            res.status(400).send({
+            res.send({
                 "errorMessage": [{
                     "message": "Incorrect availableResolutions",
                     "filed": "availableResolutions"
                 }]
-            })
+            }).status(400)
             return
         })
 
