@@ -147,9 +147,24 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         const publicationDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
         return publicationDateRegex.test(publicationDate);
     }
+    if (availableResolutions && Array.isArray(availableResolutions)) {
+        availableResolutions.forEach((r) => {
+            !AvailableResolutions.includes(r) &&
+            res.status(400).send({
+                "errorMessage": [{
+                    "message": "Incorrect availableResolutions",
+                    "filed": "availableResolutions"
+                }]
+            })
+            return
+        })
 
 
-    const id = +req.params.id
+    } else {
+        availableResolutions = []
+    }
+
+        const id = +req.params.id
     let video = videos.find((v) => v.id === id)
     if (video) {
         video.title = req.body.title
@@ -256,6 +271,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     videos = []
     res.sendStatus(204);
-})
+});
 
 
