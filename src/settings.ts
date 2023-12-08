@@ -67,7 +67,6 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     } else {
 
 
-
         res.send(videos)
         res.sendStatus(200)
     }
@@ -76,12 +75,16 @@ app.get('/videos/:id', (req: Request, res: Response) => {
 
 app.put('/videos/:id', (req: Request, res: Response) => {
 
+
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
         res.sendStatus(204)
 
         res.send("No Content")
         return
+    }
+    let errors: ErrorType = {
+        errorMessage: []
     }
 
     let title = req.body.title;
@@ -94,51 +97,50 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 
     if (!title || !title.trim() || title.length > 40 || typeof (title) !== "string") {
-        res.status(400).send({
-            "errorMessage": [{
-                "message": "Incorrect title",
-                "filed": "title"
-            }]
-        })
-        return
+        errors.errorMessage.push(
+            {
+                message: "Incorrect title",
+                field: "title"
+
+            })
     }
     if (!author || !author.trim() || author.length > 20 || typeof (title) !== "string") {
-        res.status(400).send({
-            "errorMessage": [{
-                "message": "Incorrect author",
-                "filed": "author"
-            }]
-        })
-        return
+        errors.errorMessage.push(
+            {
+                message: "Incorrect author",
+                field: "author"
+
+            })
+
     }
     if (!canBeDownloaded || typeof (canBeDownloaded) !== "boolean") {
-        res.status(400).send({
-            "errorMessage": [{
-                "message": "Incorrect canBeDownloaded",
-                "filed": "canBeDownloaded"
-            }]
-        })
-        return
+        errors.errorMessage.push(
+            {
+                message: "Incorrect canBeDownloaded",
+                field: "canBeDownloaded"
+
+            })
+
     }
 
     if (!minAgeRestriction || typeof (minAgeRestriction) !== "number") {
-        res.status(400).send({
-            "errorMessage": [{
-                "message": "Incorrect minAgeRestriction",
-                "filed": "minAgeRestriction"
-            }]
-        })
-        return
+        errors.errorMessage.push(
+            {
+                message: "Incorrect minAgeRestriction",
+                field: "minAgeRestriction"
+
+            })
+
     }
 
     if (!publicationDate || !publicationDate.trim() || (!isValidPublicationDate(publicationDate))) {
-        res.status(400).send({
-            "errorMessage": [{
-                "message": "Incorrect publicationDate",
-                "filed": "publicationDate"
-            }]
-        })
-        return
+        errors.errorMessage.push(
+            {
+                message: "Incorrect publicationDate",
+                field: "publicationDate"
+
+            })
+
     }
 
 
@@ -155,8 +157,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                     "message": "Incorrect availableResolutions",
                     "filed": "availableResolutions"
                 }]
-            }).status(400)
-            return
+            })
+            //return
         })
 
 
@@ -164,6 +166,11 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         availableResolutions = []
     }
 
+    if (errors.errorMessage.length) {
+
+        res.send(errors).status(400)
+        return //
+    }
     const id = +req.params.id
     let video = videos.find((v) => v.id === id)
     if (video) {
@@ -215,16 +222,19 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     let errors: ErrorType = {
         errorMessage: []
     }
-    if (!title || !title.trim() || title.trim().length > 40 ) {
-       // res.send(400)
-        errors.errorMessage.push({message: "Invalid title", field: "title"})
-        res.status(400).send({message: "Invalid title", field: "title"});
+    if (!title || !title.trim() || title.trim().length > 40) {
+        // res.send(400)
+        errors.errorMessage.push({
+            message: "Invalid title",
+            field: "title"
+        })
+        //res.status(400).send({message: "Invalid title", field: "title"});
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
         //res.send(400)
         errors.errorMessage.push({message: "Invalid author", field: "author"});
-        res.status(400).send({message: "Invalid author", field: "author"});
+        //  res.status(400).send({message: "Invalid author", field: "author"});
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
@@ -243,8 +253,8 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
     if (errors.errorMessage.length) {
-        res.send(400)
-        res.status(400).send(errors)
+
+        res.send(errors).status(400)
         return //
     }
 
@@ -278,6 +288,6 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
         res.sendStatus(204);
     } catch (error) {
         console.error('Error resetting videos:', error);
-        res.status(500).send({ error: 'Internal Server Error' });
+        res.status(500).send({error: 'Internal Server Error'});
     }
 });
