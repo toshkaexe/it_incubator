@@ -168,8 +168,11 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     if (errors.errorsMessages.length) {
 
-        res.status(400).send(errors)
+        res.status(400)
+        res.send(errors)
         return //
+
+
     }
     const id = +req.params.id
     let video = videos.find((v) => v.id === id)
@@ -223,7 +226,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         errorsMessages: []
     }
     if (!title || !title.trim() || title.trim().length > 40) {
-        // res.send(400)
+
         errors.errorsMessages.push({
             message: "Invalid title",
             field: "title"
