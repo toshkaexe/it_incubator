@@ -276,7 +276,8 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
     videos.push(newVideo);
-    res.status(201).send(newVideo);
+    res.send(newVideo);
+    res.status(201);
 
 
 });
