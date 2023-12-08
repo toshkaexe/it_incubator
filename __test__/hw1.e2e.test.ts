@@ -93,10 +93,11 @@ describe('/Videos API Tests', () => {
 
     it('+PUT with the empty body', async () => {
         const videoId = 1;
-        const putVideo= {};
+        const putVideo = {};
 
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-        expect(response.status).toBe(204);    });
+        expect(response.status).toBe(204);
+    });
 
     it('should return 404 when updating a non-existent video', async () => {
         const nonExistentVideoId = 999;
