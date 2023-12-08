@@ -259,7 +259,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         createAt: createdAt.toISOString(),
         publicationDate: publicationDate.toISOString(),
         availableResolutions
-
     }
 
     videos.push(newVideo);
