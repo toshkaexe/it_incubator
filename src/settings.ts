@@ -77,7 +77,16 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     }
 })
 
+
 app.put('/videos/:id', (req: Request, res: Response) => {
+
+    if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
+        // req.body is an empty object
+        res.sendStatus(204)
+        res.send("No Content")
+        return
+    }
+
     let title = req.body.title;
     let author = req.body.author;
     let canBeDownloaded = req.body.canBeDownloaded
@@ -85,6 +94,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     let publicationDate = req.body.publicationDate
     let availableResolutions = req.body.availableResolutions
+
 
     if (!title || !title.trim() || title.length > 40 || typeof (title) !== "string") {
         res.status(400).send({
@@ -201,6 +211,8 @@ type ErrorType = {
 }
 
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
+
+
     let {title, author, availableResolutions} = req.body
 
 
