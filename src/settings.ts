@@ -183,11 +183,11 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
-        res.status(204)
+        res.sendStatus(204)
         res.send(video)
 
     } else {
-        res.send(400)
+        res.sendStatus(404)
     }
 
 })
