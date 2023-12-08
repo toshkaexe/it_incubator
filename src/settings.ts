@@ -41,7 +41,7 @@ let videos: VideoDbType[] = [
 
 
 app.get('/videos', (req: Request, res: Response) => {
-    res.status(200)
+    res.sendStatus(200)
     res.send(videos)
 })
 
@@ -73,6 +73,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
 
         res.status(200)
         res.sendStatus(200)
+        res.send(200)
         res.send(videos)
     }
 })
@@ -83,6 +84,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
         res.sendStatus(204)
+        res.send(204)
         res.send("No Content")
         return
     }
@@ -223,14 +225,17 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 
     if (!title || !title.trim() || title.trim().length > 40 ||  title === null) {
+        res.send(400)
         errors.errorMessage.push({message: "Invalid title", field: "title"})
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
+        res.send(400)
         errors.errorMessage.push({message: "Invalid author", field: "author"});
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
+        res.send(400)
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
             errors.errorMessage.push({
@@ -245,8 +250,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
     if (errors.errorMessage.length) {
+        res.send(400)
         res.status(400).send(errors)
-        return //!!
+        return //
     }
 
     const createdAt = new Date();
