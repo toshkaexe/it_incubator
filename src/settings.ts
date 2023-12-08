@@ -84,7 +84,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         return
     }
     let errors: ErrorType = {
-        errorMessage: []
+        errorMessages: []
     }
 
     let title = req.body.title;
@@ -97,7 +97,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 
     if (!title || !title.trim() || title.length > 40 || typeof (title) !== "string") {
-        errors.errorMessage.push(
+        errors.errorMessages.push(
             {
                 message: "Incorrect title",
                 field: "title"
@@ -105,7 +105,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             })
     }
     if (!author || !author.trim() || author.length > 20 || typeof (author) !== "string") {
-        errors.errorMessage.push(
+        errors.errorMessages.push(
             {
                 message: "Incorrect author",
                 field: "author"
@@ -114,7 +114,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     }
     if (!canBeDownloaded || typeof (canBeDownloaded) !== "boolean") {
-        errors.errorMessage.push(
+        errors.errorMessages.push(
             {
                 message: "Incorrect canBeDownloaded",
                 field: "canBeDownloaded"
@@ -124,7 +124,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (!minAgeRestriction || typeof (minAgeRestriction) !== "number") {
-        errors.errorMessage.push(
+        errors.errorMessages.push(
             {
                 message: "Incorrect minAgeRestriction",
                 field: "minAgeRestriction"
@@ -134,7 +134,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (!publicationDate || !publicationDate.trim() || (!isValidPublicationDate(publicationDate))) {
-        errors.errorMessage.push(
+        errors.errorMessages.push(
             {
                 message: "Incorrect publicationDate",
                 field: "publicationDate"
@@ -152,7 +152,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     if (availableResolutions && Array.isArray(availableResolutions)) {
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
-            errors.errorMessage.push(
+            errors.errorMessages.push(
                 {
                     message: "Incorrect availableResolutions",
                     field: "availableResolutions"
@@ -166,7 +166,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         availableResolutions = []
     }
 
-    if (errors.errorMessage.length) {
+    if (errors.errorMessages.length) {
 
         res.send(errors).status(400)
         return //
@@ -212,7 +212,7 @@ type ErrorMessageType = {
 }
 
 type ErrorType = {
-    errorMessage: ErrorMessageType[]
+    errorMessages: ErrorMessageType[]
 }
 
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
@@ -220,11 +220,11 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
     let {title, author, availableResolutions} = req.body
     let errors: ErrorType = {
-        errorMessage: []
+        errorMessages: []
     }
     if (!title || !title.trim() || title.trim().length > 40) {
         // res.send(400)
-        errors.errorMessage.push({
+        errors.errorMessages.push({
             message: "Invalid title",
             field: "title"
         })
@@ -233,7 +233,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
     if (!author || !author.trim().length || author.trim().length > 20) {
 
-        errors.errorMessage.push({message: "Invalid author", field: "author"});
+        errors.errorMessages.push({message: "Invalid author", field: "author"});
 
     }
 
@@ -241,7 +241,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
-            errors.errorMessage.push({
+            errors.errorMessages.push({
                 message: "Invalid availableResolutions",
                 field: "availableResolutions"
             })
@@ -252,7 +252,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions = []
     }
 
-    if (errors.errorMessage.length) {
+    if (errors.errorMessages.length) {
 
         res.send(errors).status(400)
         return //
