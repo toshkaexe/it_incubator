@@ -6,12 +6,6 @@ app.use(express.json())
 //app.use(bodyParser.json()); // Add this line to parse JSON requests
 const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
-export enum CodeResponsesEnum {
-    Incorrect_values_400 = 400,
-    Not_found_404 = 404,
-    Not_content_204 = 204
-
-}
 
 type VideoDbType = {
     id: number,
@@ -218,21 +212,19 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 
     let {title, author, availableResolutions} = req.body
-
-
     let errors: ErrorType = {
         errorMessage: []
     }
-
-
     if (!title || !title.trim() || title.trim().length > 40 ) {
        // res.send(400)
         errors.errorMessage.push({message: "Invalid title", field: "title"})
+        res.status(400).send({message: "Invalid title", field: "title"});
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
         //res.send(400)
         errors.errorMessage.push({message: "Invalid author", field: "author"});
+        res.status(400).send({message: "Invalid author", field: "author"});
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
