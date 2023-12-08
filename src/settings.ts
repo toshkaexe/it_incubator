@@ -82,6 +82,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
         res.sendStatus(404)
         return
     }
+    res.sendStatus(200)
     res.send(videos)
 })
 
@@ -269,11 +270,11 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
-    videos = []
-    res.sendStatus(204);
-});
-
-app.delete('/deleteall', (req: Request, res: Response) => {
-    videos = []
-    res.sendStatus(204);
+    try {
+        videos = [];
+        res.sendStatus(204);
+    } catch (error) {
+        console.error('Error resetting videos:', error);
+        res.status(500).send({ error: 'Internal Server Error' });
+    }
 });

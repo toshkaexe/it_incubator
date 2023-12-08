@@ -20,6 +20,7 @@
   },
   "scripts": {
     "dev": "yarn nodemon --inspect dist/index.js",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "jest": "jest"
   }
 }
