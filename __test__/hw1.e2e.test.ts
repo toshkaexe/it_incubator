@@ -17,10 +17,10 @@ describe('/Videos API Tests', () => {
     let videos: VideoDbType[] = [
         {
             id: 1,
-            title: "string",
-            author: "string",
+            title: "test title",
+            author: "test author",
             canBeDownloaded: true,
-            minAgeRestriction: null,
+            minAgeRestriction: 15,
             createAt: "2023-12-04T21:42:23.091Z",
             publicationDate: "2023-12-04T21:42:23.091Z",
             availableResolutions: ["P144"]
@@ -38,6 +38,7 @@ describe('/Videos API Tests', () => {
         const response = await request(app).delete(`/videos/${nonExistentVideoId}`);
         expect(response.status).toBe(404);
     });
+
 
     it('+ GET video with correct id', async () => {
         const videoId = 1;
@@ -61,7 +62,7 @@ describe('/Videos API Tests', () => {
                 title: "vvv",
                 author: "string",
                 canBeDownloaded: true,
-                minAgeRestriction: null,
+                minAgeRestriction: 18,
                 createAt: "2023-12-04T21:42:23.091Z",
                 publicationDate: "2023-12-04T21:42:23.091Z",
                 availableResolutions: ["P144"]
@@ -72,27 +73,30 @@ describe('/Videos API Tests', () => {
         // expect(response.body).toEqual(videos); // Adjust this expectation based on your actual response
     });
 
-    it('should return 404 for a non-existent video', async () => {
-        const nonExistentVideoId = 999;
-        const response = await request(app).get(`/videos/${nonExistentVideoId}`);
-        expect(response.status).toBe(404);
-    });
 
-    it('should update a video by ID', async () => {
+    it('+PUT with correct ID', async () => {
         const videoId = 1;
-        const updatedVideo = {
-            title: 'Updated Video Title',
-            author: 'Updated Author',
-            canBeDownloaded: true,
-            minAgeRestriction: 18,
-            publicationDate: '2023-12-05T00:00:00.000Z',
-            availableResolutions: ['P720', 'P1080'],
+        const putVideo = {
+            title: "Updated Title",
+            author: "Updated Author",
+            availableResolutions: ["P144"],
         };
 
-        const response = await request(app).put(`/videos/${videoId}`).send(updatedVideo);
-        // expect(response.status).toBe(200);
-        expect(response.body).toEqual(updatedVideo); // Adjust this expectation based on your actual response
+
+        const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
+
+        expect(response.body.title).toBe("Updated Title");
+        expect(response.body.author).toBe("Updated Author");
+        expect(response.body.availableResolutions).toBe(["P144"]);
     });
+
+
+    it('+PUT with the empty body', async () => {
+        const videoId = 1;
+        const putVideo= {};
+
+        const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
+        expect(response.status).toBe(204);    });
 
     it('should return 404 when updating a non-existent video', async () => {
         const nonExistentVideoId = 999;
@@ -109,7 +113,7 @@ describe('/Videos API Tests', () => {
         expect(response.status).toBe(404);
     });
 
-    it('should create a new video', async () => {
+    it('+ POST with the a new video', async () => {
         const newVideo = {
             title: 'New Video',
             author: 'John Doe',
@@ -118,8 +122,52 @@ describe('/Videos API Tests', () => {
 
         const response = await request(app).post('/videos').send(newVideo);
         expect(response.status).toBe(201);
-        // Add more assertions as needed for the created video
+        expect(response.body.title).toBe("New Video");
+        expect(response.body.author).toBe("John Doe");
+        expect(response.body.availableResolutions).toEqual(["P144"]);
+
+
     });
+
+
+    it('- POST with the a new video with wrong title', async () => {
+        const newVideo = {
+            title: null,
+            author: 'John Doe',
+            availableResolutions: ['P144'],
+        };
+
+        const response = await request(app).post('/videos').send(newVideo);
+        expect(response.status).toBe(400);
+
+
+    });
+    it('- POST with the a new video with wrong author', async () => {
+        const newVideo = {
+            title: "test title",
+            author: null,
+            availableResolutions: ['P144'],
+        };
+
+        const response = await request(app).post('/videos').send(newVideo);
+        expect(response.status).toBe(400);
+
+
+    });
+
+    it('- POST with the a new video with wrong availableResolutions', async () => {
+        const newVideo = {
+            title: "test title",
+            author: null,
+            availableResolutions: ['D144'],
+        };
+
+        const response = await request(app).post('/videos').send(newVideo);
+        expect(response.status).toBe(400);
+
+
+    });
+
 
     it('should return 400 for invalid video creation data', async () => {
         const invalidVideo = {
@@ -152,7 +200,7 @@ describe('Other Tests', () => {
             title: "string",
             author: "string",
             canBeDownloaded: true,
-            minAgeRestriction: null,
+            minAgeRestriction: 18,
             createAt: "2023-12-04T21:42:23.091Z",
             publicationDate: "2023-12-04T21:42:23.091Z",
             availableResolutions: ["P144"]

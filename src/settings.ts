@@ -82,7 +82,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
-        res.sendStatus(201)
+        res.sendStatus(204)
         res.send("No Content")
         return
     }
@@ -174,6 +174,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
+        res.status(201)
         res.send(video)
 
     } else {
