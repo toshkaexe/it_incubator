@@ -112,7 +112,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         })
         return
     }
-    if (!canBeDownloaded ) {
+    if (!canBeDownloaded) {
         res.status(400).send({
             "errorMessage": [{
                 "message": "Incorrect canBeDownloaded",
@@ -147,6 +147,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         const publicationDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
         return publicationDateRegex.test(publicationDate);
     }
+
     if (availableResolutions && Array.isArray(availableResolutions)) {
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
@@ -164,7 +165,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         availableResolutions = []
     }
 
-        const id = +req.params.id
+    const id = +req.params.id
     let video = videos.find((v) => v.id === id)
     if (video) {
         video.title = req.body.title
