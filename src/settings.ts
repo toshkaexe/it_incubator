@@ -104,7 +104,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
             })
     }
-    if (!author || !author.trim() || author.length > 20 || typeof (title) !== "string") {
+    if (!author || !author.trim() || author.length > 20 || typeof (author) !== "string") {
         errors.errorMessage.push(
             {
                 message: "Incorrect author",
@@ -228,17 +228,17 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
             message: "Invalid title",
             field: "title"
         })
-        //res.status(400).send({message: "Invalid title", field: "title"});
+
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
-        //res.send(400)
+
         errors.errorMessage.push({message: "Invalid author", field: "author"});
-        //  res.status(400).send({message: "Invalid author", field: "author"});
+
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
-        //res.send(400)
+
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
             errors.errorMessage.push({
