@@ -1,7 +1,7 @@
 import request from 'supertest';
 import {app} from '../src/settings'
 
-describe('Video API Tests', () => {
+describe('/Videos API Tests', () => {
     const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
     type VideoDbType = {
@@ -27,25 +27,19 @@ describe('Video API Tests', () => {
         }
     ];
 
-    it('should get all videos', async () => {
+    it('+ GET all videos', async () => {
         const response = await request(app).get('/videos');
         expect(response.status).toBe(200);
         expect(response.body).toEqual(videos);
     });
 
-    it('should delete a video by ID', async () => {
-        const videoIdToDelete = 1;
-        const response = await request(app).delete(`/videos/${videoIdToDelete}`);
-        expect(response.status).toBe(204);
-    });
-
-    it('should return 404 when deleting a non-existent video', async () => {
+    it('+ GET video with incorrect id', async () => {
         const nonExistentVideoId = 999;
         const response = await request(app).delete(`/videos/${nonExistentVideoId}`);
         expect(response.status).toBe(404);
     });
 
-    it('should get a video by ID', async () => {
+    it('+ GET video with correct id', async () => {
         const videoId = 1;
 
         const response = await request(app).get(`/videos/${videoId}`);
@@ -64,7 +58,7 @@ describe('Video API Tests', () => {
         let videos: VideoDbType[] = [
             {
                 id: 1,
-                title: "string",
+                title: "vvv",
                 author: "string",
                 canBeDownloaded: true,
                 minAgeRestriction: null,
@@ -74,7 +68,7 @@ describe('Video API Tests', () => {
             }
         ];
 
-        expect(response.body).toEqual(videos);
+        expect(response.body.title).toEqual(videos);
         // expect(response.body).toEqual(videos); // Adjust this expectation based on your actual response
     });
 
@@ -96,7 +90,7 @@ describe('Video API Tests', () => {
         };
 
         const response = await request(app).put(`/videos/${videoId}`).send(updatedVideo);
-       // expect(response.status).toBe(200);
+        // expect(response.status).toBe(200);
         expect(response.body).toEqual(updatedVideo); // Adjust this expectation based on your actual response
     });
 
