@@ -82,7 +82,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
-        res.sendStatus(204)
+        res.sendStatus(201)
         res.send("No Content")
         return
     }
@@ -114,7 +114,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         })
         return
     }
-    if (!canBeDownloaded) {
+    if (!canBeDownloaded || typeof (canBeDownloaded) !== "boolean") {
         res.status(400).send({
             "errorMessage": [{
                 "message": "Incorrect canBeDownloaded",
@@ -221,7 +221,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
 
-    if (!title || !title.trim() || title.trim().length > 40) {
+    if (!title || !title.trim() || title.trim().length > 40 ||  title === null) {
         errors.errorMessage.push({message: "Invalid title", field: "title"})
     }
 
