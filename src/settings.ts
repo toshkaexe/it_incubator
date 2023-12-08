@@ -253,8 +253,8 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
     if (errors.errorMessages.length) {
-
-        res.send(errors).status(400)
+        res.status(400)
+        res.send(errors)
         return //
     }
 
