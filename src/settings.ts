@@ -33,6 +33,31 @@ let videos: VideoDbType[] = [
     }
 ]
 
+type RequestWithBody<B> = Request<{}, {}, B, {}>;
+
+type CreateVideoType = {
+    title: string,
+    author: string,
+    availableResolutions: typeof AvailableResolutions
+}
+
+type PutVideoDbType = {
+
+    title: string,
+    author: string,
+    availableResolutions: typeof AvailableResolutions,
+    canBeDownloaded: boolean,
+    minAgeRestriction: number | null
+    publicationDate: string
+}
+
+type ErrorMessageType = {
+    field: string,
+    message: string
+}
+type ErrorType = {
+    errorsMessages: ErrorMessageType[]
+}
 
 app.get('/videos', (req: Request, res: Response) => {
 
@@ -40,8 +65,18 @@ app.get('/videos', (req: Request, res: Response) => {
     res.send(200)
 })
 
-type RequestWithBody<B> = Request<{}, {}, B, {}>;
+app.get('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id
+    const video = videos.find((v) => v.id === id)
 
+    if (!video) {
+        res.sendStatus(404)
+        return
+    } else {
+        res.send(videos)
+        res.sendStatus(200)
+    }
+})
 
 app.delete('/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < videos.length; i++) {
@@ -49,35 +84,12 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
             videos.splice(i, 1);
             res.send(204)
             return;
-
         }
     }
     res.sendStatus(404)
-
 })
-
-
-app.get('/videos/:id', (req: Request, res: Response) => {
-    const id = +req.params.id
-    const video = videos.find((v) => v.id === id)
-
-    if (!video) {
-      //  res.status(404)
-        res.sendStatus(404)
-
-        return
-    } else {
-
-
-        res.send(videos)
-        res.sendStatus(200)
-    }
-})
-
 
 app.put('/videos/:id', (req: Request, res: Response) => {
-
-
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
         res.sendStatus(204)
@@ -103,7 +115,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             {
                 message: "Incorrect title",
                 field: "title"
-
             })
     }
     if (!author || !author.trim() || author.length > 20 || typeof (author) !== "string") {
@@ -111,16 +122,13 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             {
                 message: "Incorrect author",
                 field: "author"
-
             })
-
     }
     if (!canBeDownloaded || typeof (canBeDownloaded) !== "boolean") {
         errors.errorsMessages.push(
             {
                 message: "Incorrect canBeDownloaded",
                 field: "canBeDownloaded"
-
             })
 
     }
@@ -132,7 +140,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                 field: "minAgeRestriction"
 
             })
-
     }
 
     if (!publicationDate || !publicationDate.trim() || (!isValidPublicationDate(publicationDate))) {
@@ -140,11 +147,9 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             {
                 message: "Incorrect publicationDate",
                 field: "publicationDate"
-
             })
 
     }
-
 
     function isValidPublicationDate(publicationDate: string): boolean {
         const publicationDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
@@ -163,18 +168,14 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
         })
 
-
     } else {
         availableResolutions = []
     }
 
     if (errors.errorsMessages.length) {
-
         res.status(400)
         res.send(errors)
         return //
-
-
     }
     const id = +req.params.id
     let video = videos.find((v) => v.id === id)
@@ -192,37 +193,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 })
 
-
-type CreateVideoType = {
-    title: string,
-    author: string,
-    availableResolutions: typeof AvailableResolutions
-}
-
-type PutVideoDbType = {
-
-    title: string,
-    author: string,
-    availableResolutions: typeof AvailableResolutions,
-    canBeDownloaded: boolean,
-    minAgeRestriction: number | null
-    publicationDate: string,
-
-}
-
-type ErrorMessageType = {
-
-    field: string,
-    message: string
-}
-
-type ErrorType = {
-    errorsMessages: ErrorMessageType[]
-}
-
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
-
-
     let {title, author, availableResolutions} = req.body
     let errors: ErrorType = {
         errorsMessages: []
@@ -237,13 +208,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
-
         errors.errorsMessages.push({message: "Invalid author", field: "author"});
-
     }
-
     if (availableResolutions && Array.isArray(availableResolutions)) {
-
         availableResolutions.forEach((r) => {
             !AvailableResolutions.includes(r) &&
             errors.errorsMessages.push({
@@ -251,12 +218,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
                 field: "availableResolutions"
             })
         })
-
-
     } else {
         availableResolutions = []
     }
-
     if (errors.errorsMessages.length) {
         res.status(400)
         res.send(errors)
@@ -269,7 +233,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     publicationDate.setDate(createdAt.getDate() + 1);
 
     const newVideo = {
-
         id: +(new Date()),
         title,
         author,
@@ -279,13 +242,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         publicationDate: publicationDate.toISOString(),
         availableResolutions
     }
-
     videos.push(newVideo);
-
     res.send(newVideo);
     res.sendStatus(201);
-
-
 });
 
 
