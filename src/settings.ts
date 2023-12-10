@@ -1,32 +1,9 @@
 import express, {Express, Request, Response} from 'express';
-import bodyParser from 'body-parser';
+import {AvailableResolutions, StatusCode, VideoDbType} from "./types";
 
 export const app: Express = express();
 app.use(express.json())
-//app.use(bodyParser.json()); // Add this line to parse JSON requests
-const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
-export enum StatusCode {
-    OK_200 = 200,
-    Created_201 = 201,
-    NoContent_204 = 204,
-    BadRequest_400 = 400,
-    Unauthorized_401 = 401,
-    Forbidden_403 = 403,
-    NotFound_404 = 404,
-    InternalServerError_500 = 500,
-}
-
-type VideoDbType = {
-    id: number,
-    title: string,
-    author: string,
-    canBeDownloaded: boolean,
-    minAgeRestriction: number | null
-    createdAt: string,
-    publicationDate: string,
-    availableResolutions: typeof AvailableResolutions;
-}
 
 let videos: VideoDbType[] = [
     {
@@ -130,7 +107,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
     }
 
-    if (!minAgeRestriction || typeof (minAgeRestriction) !== "number"  || minAgeRestriction >18  || minAgeRestriction < 1) {
+    if (!minAgeRestriction || typeof (minAgeRestriction) !== "number" || minAgeRestriction > 18 || minAgeRestriction < 1) {
         errors.errorsMessages.push(
             {
                 message: "Incorrect minAgeRestriction",
@@ -145,19 +122,12 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         return iso8601Regex.test(value);
     }
 
-
-
-
-
-
-    if (!publicationDate  || (isDateTimeString(publicationDate)) == false  || typeof (publicationDate) == "number")
-    {
+    if (!publicationDate || (isDateTimeString(publicationDate)) == false || typeof (publicationDate) == "number") {
         errors.errorsMessages.push(
             {
                 message: "Incorrect publicationDate",
                 field: "publicationDate"
             })
-
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
@@ -169,13 +139,10 @@ app.put('/videos/:id', (req: Request, res: Response) => {
                     field: "availableResolutions"
 
                 })
-
         })
-
     } else {
         availableResolutions = []
     }
-
     if (errors.errorsMessages.length) {
         res.status(StatusCode.BadRequest_400).send(errors)
         return //

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import {app} from '../src/settings'
-import {StatusCode} from "../src/settings";
+import {StatusCode} from "../src/types";
 
 describe('/Videos API Tests', () => {
     const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
@@ -76,13 +76,17 @@ describe('/Videos API Tests', () => {
             title: "Updated Title",
             author: "Updated Author",
             availableResolutions: ["P144"],
+            canBeDownloaded: true,
+            publicationDate: "2023-12-16T21:32:56.761Z",
+            minAgeRestriction: 3
         };
 
 
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
+        expect(response.status).toBe(StatusCode.NoContent_204)
 
-        expect(response.body.title).toBe("Updated Title");
-        expect(response.body.author).toBe("Updated Author");
+        expect(response.body.title).toStrictEqual("Updated Title");
+        expect(response.body.author).toStrictEqual("Updated Author");
         expect(response.body.availableResolutions).toBe(["P144"]);
     });
 
