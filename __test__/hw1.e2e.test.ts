@@ -165,14 +165,7 @@ describe('/Videos API Tests', () => {
 
     });
 
-
-
-});
-
-describe('Other Tests', () => {
-
-
-    it('should delete all videos', async () => {
+    it('DELETE all videos', async () => {
         const response = await request(app).delete('/testing/all-data');
         expect(response.status).toBe(204);
     });
