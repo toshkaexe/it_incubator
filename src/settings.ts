@@ -102,7 +102,7 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
 app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
-        res.sendStatus(StatusCode.NoContent_204)
+        res.sendStatus(StatusCode.BadRequest_400)
         //res.send("")
         return
     }
