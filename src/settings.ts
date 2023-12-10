@@ -154,7 +154,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
-        res.sendStatus(StatusCode.NoContent_204).send(video)
+        res.status(StatusCode.NoContent_204).send(video)
 
     } else {
         res.sendStatus(StatusCode.NotFound_404)
