@@ -199,12 +199,10 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         errorsMessages: []
     }
     if (!title || !title.trim() || title.trim().length > 40) {
-
         errors.errorsMessages.push({
             message: "Invalid title",
             field: "title"
         })
-
     }
 
     if (!author || !author.trim().length || author.trim().length > 20) {
