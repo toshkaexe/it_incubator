@@ -154,6 +154,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
+        video.availableResolutions = req.body.availableResolutions
         res.status(StatusCode.NoContent_204).send(video)
 
     } else {
