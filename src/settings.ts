@@ -83,7 +83,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
         res.sendStatus(StatusCode.NotFound_404)
         return
     } else {
-        res.send(videos)
+        res.send(video)
         res.sendStatus(StatusCode.OK_200)
     }
 })
