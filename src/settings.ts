@@ -263,6 +263,6 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
         res.status(StatusCode.NoContent_204);
     } catch (error) {
         console.error('Error resetting videos:', error);
-        res.status(StatusCode.InternalServerError_500).send({error: 'Internal Server Error'});
+        res.sendStatus(StatusCode.InternalServerError_500).send({error: 'Internal Server Error'});
     }
 });
