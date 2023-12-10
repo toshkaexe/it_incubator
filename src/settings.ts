@@ -70,9 +70,7 @@ type ErrorType = {
 }
 
 app.get('/videos', (req: Request, res: Response) => {
-
-    res.send(videos)
-    res.sendStatus(StatusCode.OK_200)
+    res.status(StatusCode.OK_200).send(videos)
 })
 
 app.get('/videos/:id', (req: Request, res: Response) => {
@@ -83,8 +81,8 @@ app.get('/videos/:id', (req: Request, res: Response) => {
         res.sendStatus(StatusCode.NotFound_404)
         return
     } else {
-        res.send(videos)
-        res.status(StatusCode.OK_200)
+
+        res.status(StatusCode.OK_200).send(videos)
     }
 })
 
@@ -189,8 +187,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (errors.errorsMessages.length) {
-        res.status(StatusCode.BadRequest_400)
-        res.send(errors)
+        res.status(StatusCode.BadRequest_400).send(errors)
         return //
     }
     const id = +req.params.id
@@ -200,8 +197,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
-        res.sendStatus(StatusCode.NoContent_204)
-        res.send(video)
+        res.sendStatus(StatusCode.NoContent_204).send(video)
 
     } else {
         res.sendStatus(StatusCode.NotFound_404)
@@ -236,8 +232,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions = []
     }
     if (errors.errorsMessages.length) {
-        res.status(StatusCode.BadRequest_400)
-        res.send(errors)
+        res.status(StatusCode.BadRequest_400).send(errors)
         return //
     }
 
@@ -257,8 +252,8 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions
     }
     videos.push(newVideo);
-    res.send(newVideo);
-    res.status(StatusCode.Created_201);
+
+    res.status(StatusCode.Created_201).send(newVideo);
 });
 
 
