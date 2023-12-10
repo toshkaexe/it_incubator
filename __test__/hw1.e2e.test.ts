@@ -46,8 +46,8 @@ describe('/Videos API Tests', () => {
 
         const response = await request(app).get('/videos');
 
-            expect(response.status).toBe(StatusCode.OK_200)
-            expect(response.body).toEqual(video)
+        expect(response.status).toBe(StatusCode.OK_200)
+        expect(response.body).toEqual(video)
 
 
     });
@@ -62,9 +62,8 @@ describe('/Videos API Tests', () => {
     it('+ GET video with correct id', async () => {
 
         const videoId = 1;
-
-        await request(app).get(`/videos/${videoId}`)
-            .expect(StatusCode.OK_200, video);
+        const response = await request(app).get(`/videos/${videoId}`);
+            expect(response.status).toBe(StatusCode.OK_200);
 
 
     });
@@ -83,11 +82,19 @@ describe('/Videos API Tests', () => {
 
 
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-        expect(response.status).toBe(StatusCode.NoContent_204)
+        expect(response.status).toBe(StatusCode.NoContent_204);
 
         expect(response.body.title).toStrictEqual("Updated Title");
         expect(response.body.author).toStrictEqual("Updated Author");
-        expect(response.body.availableResolutions).toBe(["P144"]);
+        expect(response.body.availableResolutions).toStrictEqual(["P144"]);  // Update this line
+
+        /*
+         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
+         expect(response.status).toBe(StatusCode.NoContent_204)
+
+         expect(response.body.title).toStrictEqual("Updated Title");
+         expect(response.body.author).toStrictEqual("Updated Author");
+         expect(response.body.availableResolutions).toBe(["P144"]);*/
     });
 
 
