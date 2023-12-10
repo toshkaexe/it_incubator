@@ -162,7 +162,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
 
 
 
-    if (!publicationDate || !publicationDate.trim() || (isDateTimeString(publicationDate)) == false) {
+    if (!publicationDate  || (isDateTimeString(publicationDate)) == false  || typeof (publicationDate) == "number")
+    {
         errors.errorsMessages.push(
             {
                 message: "Incorrect publicationDate",
