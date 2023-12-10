@@ -84,7 +84,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
         return
     } else {
         res.send(videos)
-        res.sendStatus(StatusCode.OK_200)
+        res.status(StatusCode.OK_200)
     }
 })
 
@@ -182,7 +182,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (errors.errorsMessages.length) {
-        res.sendStatus(StatusCode.BadRequest_400)
+        res.status(StatusCode.BadRequest_400)
         res.send(errors)
         return //
     }
@@ -251,7 +251,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
     videos.push(newVideo);
     res.send(newVideo);
-    res.sendStatus(StatusCode.Created_201);
+    res.status(StatusCode.Created_201);
 });
 
 
