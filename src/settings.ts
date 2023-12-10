@@ -71,8 +71,8 @@ type ErrorType = {
 
 app.get('/videos', (req: Request, res: Response) => {
 
-    res.send(videos)
-    res.sendStatus(StatusCode.OK_200)
+
+    res.status(StatusCode.OK_200).send(videos)
 })
 
 app.get('/videos/:id', (req: Request, res: Response) => {
@@ -80,11 +80,11 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     const video = videos.find((v) => v.id === id)
 
     if (!video) {
-        res.sendStatus(StatusCode.NotFound_404)
+        res.status(StatusCode.NotFound_404)
         return
     } else {
         res.send(video)
-        res.sendStatus(StatusCode.OK_200)
+        res.status(StatusCode.OK_200)
     }
 })
 
@@ -92,17 +92,17 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
-            res.sendStatus(StatusCode.NoContent_204)
+            res.status(StatusCode.NoContent_204)
             return;
         }
     }
-    res.sendStatus(StatusCode.NotFound_404)
+    res.status(StatusCode.NotFound_404)
 })
 
 app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
-        res.sendStatus(StatusCode.NoContent_204)
+        res.status(StatusCode.NoContent_204)
         res.send("No Content")
         return
     }
@@ -182,8 +182,9 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (errors.errorsMessages.length) {
-        res.sendStatus(StatusCode.BadRequest_400)
+
         res.send(errors)
+        res.status(StatusCode.BadRequest_400)
         return //
     }
     const id = +req.params.id
@@ -193,11 +194,12 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
-        res.sendStatus(StatusCode.NoContent_204)
+
         res.send(video)
+        res.status(StatusCode.NoContent_204)
 
     } else {
-        res.sendStatus(StatusCode.NotFound_404)
+        res.status(StatusCode.NotFound_404)
     }
 
 })
@@ -251,14 +253,14 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
     videos.push(newVideo);
     res.send(newVideo);
-    res.sendStatus(StatusCode.Created_201);
+    res.status(StatusCode.Created_201);
 });
 
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     try {
         videos = [];
-        res.sendStatus(StatusCode.NoContent_204);
+        res.status(StatusCode.NoContent_204);
     } catch (error) {
         console.error('Error resetting videos:', error);
         res.status(StatusCode.InternalServerError_500).send({error: 'Internal Server Error'});
