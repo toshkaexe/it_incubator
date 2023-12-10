@@ -92,10 +92,10 @@ describe('/Videos API Tests', () => {
         const putVideo = {};
 
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-        expect(response.status).toBe(204);
+        expect(response.status).toBe(StatusCode.BadRequest_400);
     });
 
-    it('should return 404 when updating a non-existent video', async () => {
+    it('- PUT with wrong ID', async () => {
         const nonExistentVideoId = 999;
         const updatedVideo = {
             title: 'Updated Video Title',
@@ -165,7 +165,7 @@ describe('/Videos API Tests', () => {
 
     });
 
-    it('DELETE all videos', async () => {
+    it('+ DELETE all videos', async () => {
         const response = await request(app).delete('/testing/all-data');
         expect(response.status).toBe(204);
     });
