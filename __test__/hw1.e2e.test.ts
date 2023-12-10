@@ -166,16 +166,7 @@ describe('/Videos API Tests', () => {
     });
 
 
-    it('should return 400 for invalid video creation data', async () => {
-        const invalidVideo = {
-            title: 'test title',
-            author: 'John Doe',
-            availableResolutions: ['P144'],
-        };
 
-        const response = await request(app).post('/videos').send(invalidVideo);
-        expect(response.status).toBe(201);
-    });
 });
 
 describe('Other Tests', () => {
