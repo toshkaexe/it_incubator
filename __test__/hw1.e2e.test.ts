@@ -1,5 +1,6 @@
 import request from 'supertest';
 import {app} from '../src/settings'
+import {StatusCode} from "../src/settings";
 
 describe('/Videos API Tests', () => {
     const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
@@ -10,7 +11,7 @@ describe('/Videos API Tests', () => {
         author: string,
         canBeDownloaded: boolean,
         minAgeRestriction: number | null
-        createAt: string,
+        createdAt: string,
         publicationDate: string,
         availableResolutions: typeof AvailableResolutions;
     }
@@ -18,59 +19,54 @@ describe('/Videos API Tests', () => {
         {
             id: 1,
             title: "test title",
-            author: "test author",
+            author: "string",
             canBeDownloaded: true,
             minAgeRestriction: 15,
-            createAt: "2023-12-04T21:42:23.091Z",
+            createdAt: "2023-12-04T21:42:23.091Z",
             publicationDate: "2023-12-04T21:42:23.091Z",
             availableResolutions: ["P144"]
         }
     ];
 
+    let video: VideoDbType[] = [
+        {
+            id: 1,
+            title: "test string",
+            author: "test author",
+            canBeDownloaded: true,
+            minAgeRestriction: null,
+            createdAt: "2023-12-04T21:42:23.091Z",
+            publicationDate: "2023-12-04T21:42:23.091Z",
+            availableResolutions: [
+                "P144"
+            ]
+        }
+    ];
     it('+ GET all videos', async () => {
+
         const response = await request(app).get('/videos');
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual(videos);
+
+            expect(response.status).toBe(StatusCode.OK_200)
+            expect(response.body).toEqual(video)
+
+
     });
 
     it('+ GET video with incorrect id', async () => {
         const nonExistentVideoId = 999;
         const response = await request(app).delete(`/videos/${nonExistentVideoId}`);
-        expect(response.status).toBe(404);
+        expect(response.status).toBe(StatusCode.NotFound_404);
     });
 
 
     it('+ GET video with correct id', async () => {
+
         const videoId = 1;
 
-        const response = await request(app).get(`/videos/${videoId}`);
-        expect(response.status).toBe(200); //
+        await request(app).get(`/videos/${videoId}`)
+            .expect(StatusCode.OK_200, video);
 
-        type VideoDbType = {
-            id: number,
-            title: string,
-            author: string,
-            canBeDownloaded: boolean,
-            minAgeRestriction: number | null
-            createAt: string,
-            publicationDate: string,
-            availableResolutions: typeof AvailableResolutions;
-        }
-        let videos: VideoDbType[] = [
-            {
-                id: 1,
-                title: "vvv",
-                author: "string",
-                canBeDownloaded: true,
-                minAgeRestriction: 18,
-                createAt: "2023-12-04T21:42:23.091Z",
-                publicationDate: "2023-12-04T21:42:23.091Z",
-                availableResolutions: ["P144"]
-            }
-        ];
 
-        expect(response.body.title).toEqual(videos);
-        // expect(response.body).toEqual(videos); // Adjust this expectation based on your actual response
     });
 
 
@@ -122,7 +118,7 @@ describe('/Videos API Tests', () => {
         };
 
         const response = await request(app).post('/videos').send(newVideo);
-        expect(response.status).toBe(201);
+        expect(response.status).toBe(StatusCode.Created_201);
         expect(response.body.title).toBe("New Video");
         expect(response.body.author).toBe("John Doe");
         expect(response.body.availableResolutions).toEqual(["P144"]);
@@ -183,30 +179,7 @@ describe('/Videos API Tests', () => {
 });
 
 describe('Other Tests', () => {
-    const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
-    type VideoDbType = {
-        id: number,
-        title: string,
-        author: string,
-        canBeDownloaded: boolean,
-        minAgeRestriction: number | null
-        createAt: string,
-        publicationDate: string,
-        availableResolutions: typeof AvailableResolutions;
-    }
-    let videos: VideoDbType[] = [
-        {
-            id: 1,
-            title: "string",
-            author: "string",
-            canBeDownloaded: true,
-            minAgeRestriction: 18,
-            createAt: "2023-12-04T21:42:23.091Z",
-            publicationDate: "2023-12-04T21:42:23.091Z",
-            availableResolutions: ["P144"]
-        }
-    ];
 
     it('should delete all videos', async () => {
         const response = await request(app).delete('/testing/all-data');

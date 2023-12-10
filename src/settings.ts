@@ -6,7 +6,7 @@ app.use(express.json())
 //app.use(bodyParser.json()); // Add this line to parse JSON requests
 const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
-enum StatusCode {
+export enum StatusCode {
     OK_200 = 200,
     Created_201 = 201,
     NoContent_204 = 204,
@@ -23,7 +23,7 @@ type VideoDbType = {
     author: string,
     canBeDownloaded: boolean,
     minAgeRestriction: number | null
-    createAt: string,
+    createdAt: string,
     publicationDate: string,
     availableResolutions: typeof AvailableResolutions;
 }
@@ -31,11 +31,11 @@ type VideoDbType = {
 let videos: VideoDbType[] = [
     {
         id: 1,
-        title: "string",
-        author: "string",
+        title: "test string",
+        author: "test author",
         canBeDownloaded: true,
         minAgeRestriction: null,
-        createAt: "2023-12-04T21:42:23.091Z",
+        createdAt: "2023-12-04T21:42:23.091Z",
         publicationDate: "2023-12-04T21:42:23.091Z",
         availableResolutions: [
             "P144"
@@ -103,7 +103,6 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
         res.sendStatus(StatusCode.NoContent_204)
-
         res.send("No Content")
         return
     }
@@ -246,7 +245,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createAt: createdAt.toISOString(),
+        createdAt: createdAt.toISOString(),
         publicationDate: publicationDate.toISOString(),
         availableResolutions
     }
