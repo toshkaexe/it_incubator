@@ -151,18 +151,24 @@ app.put('/videos/:id', (req: Request, res: Response) => {
             })
     }
 
-    if (!publicationDate || !publicationDate.trim() || (!isValidPublicationDate(publicationDate))) {
+
+    function isDateTimeString(value: string): boolean {
+        const iso8601Regex = /^20\d{2}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d{3}Z$/;
+        return iso8601Regex.test(value);
+    }
+
+
+
+
+
+
+    if (!publicationDate || !publicationDate.trim() || (isDateTimeString(publicationDate)) == false) {
         errors.errorsMessages.push(
             {
                 message: "Incorrect publicationDate",
                 field: "publicationDate"
             })
 
-    }
-
-    function isValidPublicationDate(publicationDate: string): boolean {
-        const publicationDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
-        return publicationDateRegex.test(publicationDate);
     }
 
     if (availableResolutions && Array.isArray(availableResolutions)) {
