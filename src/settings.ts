@@ -51,16 +51,6 @@ type CreateVideoType = {
     availableResolutions: typeof AvailableResolutions
 }
 
-type PutVideoDbType = {
-
-    title: string,
-    author: string,
-    availableResolutions: typeof AvailableResolutions,
-    canBeDownloaded: boolean,
-    minAgeRestriction: number | null
-    publicationDate: string
-}
-
 type ErrorMessageType = {
     field: string,
     message: string
