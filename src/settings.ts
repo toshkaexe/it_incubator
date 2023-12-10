@@ -6,6 +6,16 @@ app.use(express.json())
 //app.use(bodyParser.json()); // Add this line to parse JSON requests
 const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
 
+enum StatusCode {
+    OK_200 = 200,
+    Created_201 = 201,
+    NoContent_204 = 204,
+    BadRequest_400 = 400,
+    Unauthorized_401 = 401,
+    Forbidden_403 = 403,
+    NotFound_404 = 404,
+    InternalServerError_500 = 500,
+}
 
 type VideoDbType = {
     id: number,
@@ -62,7 +72,7 @@ type ErrorType = {
 app.get('/videos', (req: Request, res: Response) => {
 
     res.send(videos)
-    res.send(200)
+    res.sendStatus(StatusCode.OK_200)
 })
 
 app.get('/videos/:id', (req: Request, res: Response) => {
@@ -70,11 +80,11 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     const video = videos.find((v) => v.id === id)
 
     if (!video) {
-        res.sendStatus(404)
+        res.sendStatus(StatusCode.NotFound_404)
         return
     } else {
         res.send(videos)
-        res.sendStatus(200)
+        res.sendStatus(StatusCode.OK_200)
     }
 })
 
@@ -82,17 +92,17 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
             videos.splice(i, 1);
-            res.send(204)
+            res.sendStatus(StatusCode.NoContent_204)
             return;
         }
     }
-    res.sendStatus(404)
+    res.sendStatus(StatusCode.NotFound_404)
 })
 
 app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
         // req.body is an empty object
-        res.sendStatus(204)
+        res.sendStatus(StatusCode.NoContent_204)
 
         res.send("No Content")
         return
@@ -173,7 +183,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
     }
 
     if (errors.errorsMessages.length) {
-        res.status(400)
+        res.sendStatus(StatusCode.BadRequest_400)
         res.send(errors)
         return //
     }
@@ -184,11 +194,11 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.author = req.body.author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.publicationDate = req.body.publicationDate
-        res.sendStatus(204)
+        res.sendStatus(StatusCode.NoContent_204)
         res.send(video)
 
     } else {
-        res.sendStatus(404)
+        res.sendStatus(StatusCode.NotFound_404)
     }
 
 })
@@ -220,7 +230,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions = []
     }
     if (errors.errorsMessages.length) {
-        res.status(400)
+        res.status(StatusCode.BadRequest_400)
         res.send(errors)
         return //
     }
@@ -242,16 +252,16 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
     videos.push(newVideo);
     res.send(newVideo);
-    res.sendStatus(201);
+    res.sendStatus(StatusCode.Created_201);
 });
 
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     try {
         videos = [];
-        res.sendStatus(204);
+        res.sendStatus(StatusCode.NoContent_204);
     } catch (error) {
         console.error('Error resetting videos:', error);
-        res.status(500).send({error: 'Internal Server Error'});
+        res.status(StatusCode.InternalServerError_500).send({error: 'Internal Server Error'});
     }
 });
