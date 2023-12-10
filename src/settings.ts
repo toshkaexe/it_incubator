@@ -72,7 +72,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
         return
     } else {
 
-        res.status(StatusCode.OK_200).send(videos)
+        res.status(StatusCode.OK_200).send(video)
     }
 })
 
