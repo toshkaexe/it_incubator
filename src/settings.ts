@@ -1,5 +1,5 @@
 import express, {Express, Request, Response} from 'express';
-import {AvailableResolutions, StatusCode, VideoDbType} from "./types";
+import {AvailableResolutions, CreateVideoType, ErrorType, RequestWithBody, StatusCode, VideoDbType} from "./types";
 
 export const app: Express = express();
 app.use(express.json())
@@ -20,21 +20,6 @@ let videos: VideoDbType[] = [
     }
 ]
 
-type RequestWithBody<B> = Request<{}, {}, B, {}>;
-
-type CreateVideoType = {
-    title: string,
-    author: string,
-    availableResolutions: typeof AvailableResolutions
-}
-
-type ErrorMessageType = {
-    field: string,
-    message: string
-}
-type ErrorType = {
-    errorsMessages: ErrorMessageType[]
-}
 
 app.get('/videos', (req: Request, res: Response) => {
     res.status(StatusCode.OK_200).send(videos)

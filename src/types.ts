@@ -1,3 +1,4 @@
+import {Request} from "express";
 
 export const AvailableResolutions = ["P144",
     "P240",
@@ -27,4 +28,21 @@ export type VideoDbType = {
     createdAt: string,
     publicationDate: string,
     availableResolutions: typeof AvailableResolutions;
+}
+
+
+export type RequestWithBody<B> = Request<{}, {}, B, {}>;
+
+export type CreateVideoType = {
+    title: string,
+    author: string,
+    availableResolutions: typeof AvailableResolutions
+}
+
+export type ErrorMessageType = {
+    field: string,
+    message: string
+}
+export type ErrorType = {
+    errorsMessages: ErrorMessageType[]
 }
