@@ -79,22 +79,15 @@ describe('/Videos API Tests', () => {
             publicationDate: "2023-12-16T21:32:56.761Z",
             minAgeRestriction: 3
         };
-
-
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-        expect(response.status).toBe(StatusCode.NoContent_204);
-
+        console.log(response.body)
+        expect(response.status).toBe(StatusCode.OK_200);
         expect(response.body.title).toStrictEqual("Updated Title");
         expect(response.body.author).toStrictEqual("Updated Author");
-        expect(response.body.availableResolutions).toStrictEqual(["P144"]);  // Update this line
-
-        /*
-         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-         expect(response.status).toBe(StatusCode.NoContent_204)
-
-         expect(response.body.title).toStrictEqual("Updated Title");
-         expect(response.body.author).toStrictEqual("Updated Author");
-         expect(response.body.availableResolutions).toBe(["P144"]);*/
+        expect(response.body.availableResolutions).toStrictEqual(["P144"]);
+        expect(response.body.canBeDownloaded).toBe(true);
+        expect(response.body.publicationDate).toStrictEqual("2023-12-16T21:32:56.761Z");
+        expect(response.body.minAgeRestriction).toBe(3);
     });
 
 

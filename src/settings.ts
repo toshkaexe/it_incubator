@@ -156,7 +156,8 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
         video.availableResolutions = req.body.availableResolutions
-        res.status(StatusCode.NoContent_204).send(video)
+        console.log(video)
+        res.status(StatusCode.OK_200).send(video)
 
     } else {
         res.sendStatus(StatusCode.NotFound_404)
