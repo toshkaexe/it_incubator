@@ -3,7 +3,15 @@ import {app} from '../src/settings'
 import {StatusCode} from "../src/types";
 
 describe('/Videos API Tests', () => {
-    const AvailableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"];
+    const AvailableResolutions = [
+        "P144",
+        "P240",
+        "P360",
+        "P480",
+        "P720",
+        "P1080",
+        "P1440",
+        "P2160"];
 
     type VideoDbType = {
         id: number,
@@ -54,7 +62,7 @@ describe('/Videos API Tests', () => {
 
     it('+ GET video with incorrect id', async () => {
         const nonExistentVideoId = 999;
-        const response = await request(app).delete(`/videos/${nonExistentVideoId}`);
+        const response = await request(app).get(`/videos/${nonExistentVideoId}`);
         expect(response.status).toBe(StatusCode.NotFound_404);
     });
 
@@ -80,7 +88,7 @@ describe('/Videos API Tests', () => {
             minAgeRestriction: 3
         };
         const response = await request(app).put(`/videos/${videoId}`).send(putVideo);
-        console.log(response.body)
+        //console.log(response.body)
         expect(response.status).toBe(StatusCode.OK_200);
         expect(response.body.title).toStrictEqual("Updated Title");
         expect(response.body.author).toStrictEqual("Updated Author");

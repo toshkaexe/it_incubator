@@ -1,6 +1,7 @@
 import {Request} from "express";
 
-export const AvailableResolutions = ["P144",
+export const AvailableResolutions = [
+    "P144",
     "P240",
     "P360",
     "P480",

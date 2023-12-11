@@ -51,9 +51,9 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
 
 app.put('/videos/:id', (req: Request, res: Response) => {
     if (Object.keys(req.body).length === 0 && req.body.constructor === Object) {
-        // req.body is an empty object
+
         res.sendStatus(StatusCode.BadRequest_400)
-        //res.send("")
+
         return
     }
     let errors: ErrorType = {
@@ -141,7 +141,7 @@ app.put('/videos/:id', (req: Request, res: Response) => {
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
         video.availableResolutions = req.body.availableResolutions
-        console.log(video)
+       // console.log(video)
         res.status(StatusCode.OK_200).send(video)
 
     } else {
